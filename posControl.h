@@ -1,6 +1,6 @@
 task trackPos(){
 
-	float chassisWidth;
+	float chassisWidth /* = */ ;
 	float dR;
 	float dL;
 	float dM;
@@ -41,29 +41,25 @@ task trackPos(){
 		dY = dS * sin(avgTheta) - dM * cos(avgTheta);
 
 		// Update current robot position.
-		x += dX;
-		y += dY;
+		xPos += dX;
+		yPos += dY;
 		theta += dTheta;
 
 		lastEncoderValueL = currentEncoderValueL;
 		lastEncoderValueR = currentEncoderValueR;
 		lastEncoderValueM = currentEncoderValueM;
 
-		writeDebugStreamLine("X = %f   Y = %f   Heading = %f", x, y, theta);
+		writeDebugStreamLine("X = %f   Y = %f   Heading = %f", xPos, yPos, theta);
 
-		delay(10);
+		delay(5);
 	}
 
 }
 
 void moveTo(int targetX, int targetY){
 
-	float currX = x;
-	float currY = y;
-	float currAngle = theta;
-
-	float targetAngle = atan(targetY/targetX);
-	float targetDist = sqrt( pow((targetX - currX),2) + pow((targetY - currY),2) );
+	float distFromTarget = sqrt( pow((targetX - xPos),2) + pow((targetY - yPos),2) );
+	float angleFromTarget = atan2((yPos - targetY),(xPos - targetX)) - theta;
 	float drivePower = 0;
 	float turnPower = 0;
 	float highPass = 50;
@@ -73,10 +69,12 @@ void moveTo(int targetX, int targetY){
 	struct PID turnPID;
 	initPIDStruct(&turnPID, 0, 0, 0);
 
+	/*
 	float deltaTrackerR = 0;
 	float deltaTrackerL = 0;
 	float frozenTrackerValR = rTracker;
 	float frozenTrackerValL = lTracker;
+	*/
 
 	/*
 	minigoal for deltaTracker: get value that mimics what the encoder is getting but starting at 0 without resetting encoder
@@ -84,19 +82,20 @@ void moveTo(int targetX, int targetY){
 	*/
 	while(true){
 
-		deltaTrackerR = SensorValue[rTracker] - frozenTrackerValR;
-		deltaTrackerL = SensorValue[lTracker] - frozenTrackerValL;
+		angleFromTarget = atan2((yPos - targetY),(xPos - targetX)) - theta;
+		distFromTarget = sqrt( pow((targetX - xPos),2) + pow((targetY - yPos),2) );
 
+		//deltaTrackerR = SensorValue[rTracker] - frozenTrackerValR;
+		//deltaTrackerL = SensorValue[lTracker] - frozenTrackerValL;
+
+		/*
 		if((deltaTrackerR + deltaTrackerL)/2 == targetDist){
 			break;
 		}
+		*/
 
-		if(currAngle == targetAngle){
-			break;
-		}
-
-		drivePower = calcPID(&drivePID, (deltaTrackerR + deltaTrackerL)/2, targetDist);
-		turnPower = calcPID(&turnPID, currAngle, targetAngle);
+		drivePower = calcPID(&drivePID, distFromTarget, 0);
+		turnPower = calcPID(&turnPID, angleFromTarget, 0);
 
 		if(turnPower > highPass){
 			turnPower = highPass;
