@@ -58,41 +58,24 @@ task trackPos(){
 
 void moveTo(int targetX, int targetY){
 
-	float distFromTarget = sqrt( pow((targetX - xPos),2) + pow((targetY - yPos),2) );
-	float angleFromTarget = atan2((yPos - targetY),(xPos - targetX)) - theta;
+	float distFromTarget;
+	float angleFromTarget;
+
 	float drivePower = 0;
 	float turnPower = 0;
+
 	float highPass = 50;
+	float breakThreshold = 5;
 
 	struct PID drivePID;
 	initPIDStruct(&drivePID, 0, 0, 0);
 	struct PID turnPID;
 	initPIDStruct(&turnPID, 0, 0, 0);
 
-	/*
-	float deltaTrackerR = 0;
-	float deltaTrackerL = 0;
-	float frozenTrackerValR = rTracker;
-	float frozenTrackerValL = lTracker;
-	*/
+	do {
 
-	/*
-	minigoal for deltaTracker: get value that mimics what the encoder is getting but starting at 0 without resetting encoder
-															so i dont mess with trackPos()
-	*/
-	while(true){
-
-		angleFromTarget = atan2((yPos - targetY),(xPos - targetX)) - theta;
+		angleFromTarget = atan2((targetY - yPos),(targetX - xPos)) - theta;
 		distFromTarget = sqrt( pow((targetX - xPos),2) + pow((targetY - yPos),2) );
-
-		//deltaTrackerR = SensorValue[rTracker] - frozenTrackerValR;
-		//deltaTrackerL = SensorValue[lTracker] - frozenTrackerValL;
-
-		/*
-		if((deltaTrackerR + deltaTrackerL)/2 == targetDist){
-			break;
-		}
-		*/
 
 		drivePower = calcPID(&drivePID, distFromTarget, 0);
 		turnPower = calcPID(&turnPID, angleFromTarget, 0);
@@ -104,6 +87,8 @@ void moveTo(int targetX, int targetY){
 		powerDrive(drivePower + turnPower, drivePower - turnPower);
 
 		delay(10);
+
 	}
+	while (fabs(0 - distFromTarget) > breakThreshold);
 
 }
