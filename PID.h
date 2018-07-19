@@ -1,4 +1,4 @@
-float calcPID(struct PID *PID, float input, float target){
+float calcPID(struct PID *PID, float input, float target){ //calculates the PID values for any PID struct passed to it by reference, outputs power
 
 	//while((SensorValue[rTracker] + SensorValue[lTracker])/2 < target){
 
@@ -21,7 +21,7 @@ float calcPID(struct PID *PID, float input, float target){
 	//}
 }
 
-void initPIDStruct(struct PID *PID, float kP, float kI, float kD){
+void initPIDStruct(struct PID *PID, float kP, float kI, float kD){ //function used to initialize a PID struct with the PID constants and sets everything else to 0
 	PID->kP = kP;
 	PID->kI = kI;
 	PID->kD = kD;

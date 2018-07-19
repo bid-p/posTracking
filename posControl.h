@@ -58,14 +58,14 @@ task trackPos(){
 
 void moveTo(int targetX, int targetY){
 
-	float distFromTarget;
-	float angleFromTarget;
+	float distFromTarget; //current distanct from target
+	float angleFromTarget; //current angle distance from target (in rads)
 
-	float drivePower = 0;
-	float turnPower = 0;
+	float drivePower = 0; //amount of power to be supplied to drive in the Y direction
+	float turnPower = 0; //amount of power to be supplied to drive to turn
 
-	float highPass = 50;
-	float breakThreshold = 5;
+	float highPass = 50; //constant used to limit turnPower in the high pass filter
+	float breakThreshold = 5; //threshold (in ticks) used to cushion how far away from the target is enough to break from the loop
 
 	struct PID drivePID;
 	initPIDStruct(&drivePID, 0, 0, 0);
@@ -74,13 +74,13 @@ void moveTo(int targetX, int targetY){
 
 	do {
 
-		angleFromTarget = atan2((targetY - yPos),(targetX - xPos)) - theta;
-		distFromTarget = sqrt( pow((targetX - xPos),2) + pow((targetY - yPos),2) );
+		angleFromTarget = atan2((targetY - yPos),(targetX - xPos)) - theta; //initializes angleFromTarget using the inverse tangent, updates every 10ms
+		distFromTarget = sqrt( pow((targetX - xPos),2) + pow((targetY - yPos),2) ); //initializes distFromTarget using distance formula, updates every 10ms
 
-		drivePower = calcPID(&drivePID, distFromTarget, 0);
-		turnPower = calcPID(&turnPID, angleFromTarget, 0);
+		drivePower = calcPID(&drivePID, distFromTarget, 0); //runs the calcPID function to calc how much power to move by when PID is fed distFromTarget and 0, the goal for distFromTarget
+		turnPower = calcPID(&turnPID, angleFromTarget, 0); //runs the calcPID function to calc how much power to move by when PID is fed angleFromTarget and 0, the goal for angleFromTarget
 
-		if(turnPower > highPass){
+		if(turnPower > highPass){ //high pass filter biases the drive so that it turns and drive to target at the same time (curved movement)
 			turnPower = highPass;
 		}
 
@@ -89,6 +89,6 @@ void moveTo(int targetX, int targetY){
 		delay(10);
 
 	}
-	while (fabs(0 - distFromTarget) > breakThreshold);
+	while (fabs(0 - distFromTarget) > breakThreshold); //while the absolute value of 0 - distFromTarget is greater than the threshold...
 
 }

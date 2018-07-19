@@ -1,6 +1,4 @@
-//struct PID PID;
-
-struct PID{
+struct PID{ //struct definition for PIDs
 
 	float kP;
 	float kI;
