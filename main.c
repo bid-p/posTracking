@@ -23,6 +23,6 @@ task main()
 
 	startTask(trackPos); //posTracking task
 
-	moveTo(30,40); //test positions
+	moveTo(30,40,5); //test positions
 
 }

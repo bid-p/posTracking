@@ -56,7 +56,7 @@ task trackPos(){
 
 }
 
-void moveTo(int targetX, int targetY){
+void moveTo(int targetX, int targetY, float breakThreshold){
 
 	float distFromTarget; //current distanct from target
 	float angleFromTarget; //current angle distance from target (in rads)
@@ -65,7 +65,6 @@ void moveTo(int targetX, int targetY){
 	float turnPower = 0; //amount of power to be supplied to drive to turn
 
 	float highPass = 50; //constant used to limit turnPower in the high pass filter
-	float breakThreshold = 5; //threshold (in ticks) used to cushion how far away from the target is enough to break from the loop
 
 	struct PID drivePID;
 	initPIDStruct(&drivePID, 0, 0, 0);
@@ -90,5 +89,5 @@ void moveTo(int targetX, int targetY){
 
 	}
 	while (fabs(0 - distFromTarget) > breakThreshold); //while the absolute value of 0 - distFromTarget is greater than the threshold...
-
+	//threshold is value (in ticks) used to cushion how far away from the target is enough to break from the loop
 }
