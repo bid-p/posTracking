@@ -1,6 +1,6 @@
 task trackPos(){
 
-	float chassisWidth /* = */ ;
+	float chassisWidth = 5;
 	float dR;
 	float dL;
 	float dM;
@@ -88,6 +88,6 @@ void moveTo(int targetX, int targetY, float breakThreshold){
 		delay(10);
 
 	}
-	while (fabs(0 - distFromTarget) > breakThreshold); //while the absolute value of 0 - distFromTarget is greater than the threshold...
+	while (fabs(distFromTarget) < breakThreshold); //while the absolute value of 0 - distFromTarget is greater than the threshold...
 	//threshold is value (in ticks) used to cushion how far away from the target is enough to break from the loop
 }
