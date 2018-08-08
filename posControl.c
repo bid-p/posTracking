@@ -51,7 +51,7 @@ task trackPos(){
 
 		writeDebugStreamLine("X = %f   Y = %f   Heading = %f", xPos, yPos, theta);
 
-		delay(5);
+		EndTimeSlice();
 	}
 
 }
@@ -89,5 +89,5 @@ void moveTo(int targetX, int targetY, float breakThreshold){
 
 	}
 	while (fabs(distFromTarget) < breakThreshold); //while the absolute value of 0 - distFromTarget is greater than the threshold...
-	//threshold is value (in ticks) used to cushion how far away from the target is enough to break from the loop
+		//threshold is value (in ticks) used to cushion how far away from the target is enough to break from the loop
 }
