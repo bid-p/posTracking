@@ -19,8 +19,10 @@ task trackPos(){
 
 	while(true){
 
-		currentEncoderValueR = SensorValue[rTracker];
-		currentEncoderValueL = SensorValue[lTracker];
+		currentEncoderValueR = SensorValue[trackerR];
+		currentEncoderValueL = SensorValue[trackerL];
+		currentEncoderValueM = SensorValue[trackerH];
+		//SET MIDDLE ENCODER VALUE??
 
 		// Can multiply by a scalar to get the values in inches, or whatever unit I want x and y coordinates to be in.
 		dR = currentEncoderValueR - lastEncoderValueR;
@@ -79,7 +81,7 @@ void moveTo(int targetX, int targetY, float breakThreshold){
 		drivePower = calcPID(&drivePID, distFromTarget, 0); //runs the calcPID function to calc how much power to move by when PID is fed distFromTarget and 0, the goal for distFromTarget
 		turnPower = calcPID(&turnPID, angleFromTarget, 0); //runs the calcPID function to calc how much power to move by when PID is fed angleFromTarget and 0, the goal for angleFromTarget
 
-		if(turnPower > highPass){ //high pass filter biases the drive so that it turns and drive to target at the same time (curved movement)
+		if(turnPower > highPass){ //high pass filter biases the drive so that it turns and drives to target at the same time (curved movement)
 			turnPower = highPass;
 		}
 

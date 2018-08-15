@@ -1,6 +1,6 @@
-#pragma config(Sensor, dgtl1,  rTracker,       sensorQuadEncoder)
-#pragma config(Sensor, dgtl3,  lTracker,       sensorQuadEncoder)
-#pragma config(Sensor, dgtl5,  hTracker,       sensorQuadEncoder)
+#pragma config(Sensor, dgtl1,  trackerR,       sensorQuadEncoder)
+#pragma config(Sensor, dgtl3,  trackerL,       sensorQuadEncoder)
+#pragma config(Sensor, dgtl5,  trackerH,       sensorQuadEncoder)
 #pragma config(Motor,  port2,           driveL1,       tmotorVex393TurboSpeed_MC29, openLoop)
 #pragma config(Motor,  port3,           driveL2,       tmotorVex393TurboSpeed_MC29, openLoop)
 #pragma config(Motor,  port4,           driveR1,       tmotorVex393TurboSpeed_MC29, openLoop, reversed)
@@ -11,10 +11,10 @@ float xPos; //var holding robot's x coordinate , relative to startup position , 
 float yPos; //var holding robot's y coordinate , relative to startup position , updates every 5ms
 float theta; //var holding robot's heading , relative to startup position , updates every 5 ms
 
-#include "miscFunctions.h"
+#include "miscFunctions.c"
 #include "PIDstruct.h"
-#include "PID.h"
-#include "posControl.h"
+#include "PID.c"
+#include "posControl.c"
 
 task main()
 {
